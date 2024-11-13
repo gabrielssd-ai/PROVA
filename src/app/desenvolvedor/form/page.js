@@ -8,7 +8,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { FaArrowLeft, FaCheck } from 'react-icons/fa';
 import { v4 } from 'uuid';
 import * as Yup from 'yup';
-import InputMask from 'react-input-mask';
+import ReactInputMask from 'react-input-mask';
 
 export default function page(props) {
     const router = useRouter();
@@ -79,13 +79,14 @@ export default function page(props) {
 
                             <Form.Group as={Col}>
                                 <Form.Label>Fundação:</Form.Label>
-                                <InputMask
-                                    mask="9999/99/99"
-                                    name='fundacao'
-                                    value={values.fundacao}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.fundacao && errors.fundacao ? 'is-invalid' : 'is-valid'}`}
+                                <Form.Control as={ReactInputMask}
+                                   mask="9999/99/99"
+                                   name="fundacao"
+                                   value={values.fundacao}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.fundacao && !errors.fundacao}
+                                   isInvalid={touched.fundacao && errors.fundacao}
                                 />
                                 <Form.Control.Feedback type='invalid'>{errors.fundacao}</Form.Control.Feedback>
                             </Form.Group>
@@ -171,13 +172,14 @@ export default function page(props) {
 
                             <Form.Group as={Col}>
                                 <Form.Label>Número de Funcionários:</Form.Label>
-                                <InputMask
-                                    mask="9999999"
-                                    name='numeroFuncionarios'
-                                    value={values.numeroFuncionarios}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.numeroFuncionarios && errors.numeroFuncionarios ? 'is-invalid' : 'is-valid'}`}
+                                <Form.Control as={ReactInputMask}
+                                   mask="9999"
+                                   name="numeroFuncionarios"
+                                   value={values.numeroFuncionarios}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.numeroFuncionarios && !errors.numeroFuncionarios}
+                                   isInvalid={touched.numeroFuncionarios && errors.numeroFuncionarios}
                                 />
                                 <Form.Control.Feedback type='invalid'>{errors.numeroFuncionarios}</Form.Control.Feedback>
                             </Form.Group>

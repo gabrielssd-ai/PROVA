@@ -9,7 +9,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { FaArrowLeft, FaCheck } from 'react-icons/fa';
 import { v4 } from 'uuid';
 import * as Yup from 'yup';
-import InputMask from 'react-input-mask';
+import ReactInputMask from 'react-input-mask';
 
 export default function Page(props) {
     const router = useRouter();
@@ -109,13 +109,14 @@ export default function Page(props) {
 
                             <Form.Group as={Col}>
                                 <Form.Label>Nota:</Form.Label>
-                                <InputMask
-                                    mask="9.9"
-                                    name="nota"
-                                    value={values.nota}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.nota && errors.nota ? 'is-invalid' : ''}`}
+                                <Form.Control as={ReactInputMask}
+                                   mask="9.9"
+                                   name="nota"
+                                   value={values.nota}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.nota && !errors.nota}
+                                   isInvalid={touched.nota && errors.nota}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.nota}</Form.Control.Feedback>
                             </Form.Group>
@@ -162,13 +163,14 @@ export default function Page(props) {
                         <Row className="mb-3">
                             <Form.Group as={Col}>
                                 <Form.Label>Data de Lançamento:</Form.Label>
-                                <InputMask
-                                    mask="9999/99/99"
-                                    name="dataLancamento"
-                                    value={values.dataLancamento}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.dataLancamento && errors.dataLancamento ? 'is-invalid' : ''}`}
+                                <Form.Control as={ReactInputMask}
+                                   mask="9999/99/99"
+                                   name="dataLancamento"
+                                   value={values.dataLancamento}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.dataLancamento && !errors.dataLancamento}
+                                   isInvalid={touched.dataLancamento && errors.dataLancamento}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.dataLancamento}</Form.Control.Feedback>
                             </Form.Group>
@@ -206,14 +208,14 @@ export default function Page(props) {
 
                             <Form.Group as={Col}>
                                 <Form.Label>Classificação Etária:</Form.Label>
-                                <InputMask
-                                    mask="99"
-                                    name="classificacaoEtaria"
-                                    value={values.classificacaoEtaria}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.classificacaoEtaria && errors.classificacaoEtaria ? 'is-invalid' : ''}`}
-                                    placeholder="Ex: 18"
+                                <Form.Control as={ReactInputMask}
+                                   mask="9.9"
+                                   name="classificacaoEtaria"
+                                   value={values.classificacaoEtaria}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.classificacaoEtaria && !errors.classificacaoEtaria}
+                                   isInvalid={touched.classificacaoEtaria && errors.classificacaoEtaria}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.classificacaoEtaria}</Form.Control.Feedback>
                             </Form.Group>

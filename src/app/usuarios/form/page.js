@@ -9,7 +9,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { FaArrowLeft, FaCheck } from 'react-icons/fa';
 import { v4 } from 'uuid';
 import * as Yup from 'yup';
-import InputMask from 'react-input-mask';
+import ReactInputMask from 'react-input-mask';
 
 export default function Page(props) {
     const router = useRouter();
@@ -91,7 +91,7 @@ export default function Page(props) {
         dataNascimento: Yup.date().required("Campo Obrigatório"),
         jogoFavorito: Yup.string().required("Campo Obrigatório"),
         generoPreferido: Yup.string().required("Campo Obrigatório"),
-        equipe: Yup.string().required("Campo Obrigatório"),
+        equipe: Yup.string().optional(),
         desenvolvedorFavorito: Yup.string().required("Campo Obrigatório"),
         torneiosParticipados: Yup.string().required("Campo Obrigatório"),
         email: Yup.string().email("E-mail inválido").required("Campo Obrigatório"),
@@ -123,14 +123,14 @@ export default function Page(props) {
 
                             <Form.Group as={Col}>
                                 <Form.Label>Data de Nascimento:</Form.Label>
-                                <InputMask
-                                    mask="99/99/9999"
-                                    name="dataNascimento"
-                                    value={values.dataNascimento}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.dataNascimento && errors.dataNascimento ? 'is-invalid' : ''}`}
-                                    placeholder="DD/MM/AAAA"
+                                <Form.Control as={ReactInputMask}
+                                   mask="9999/99/99"
+                                   name="dataNascimento"
+                                   value={values.dataNascimento}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.dataNascimento && !errors.dataNascimento}
+                                   isInvalid={touched.dataNascimento && errors.dataNascimento}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.dataNascimento}</Form.Control.Feedback>
                             </Form.Group>

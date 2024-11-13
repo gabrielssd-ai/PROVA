@@ -11,6 +11,7 @@ import { v4 } from 'uuid';
 import * as Yup from 'yup';
 import ReactInputMask from 'react-input-mask';
 
+
 export default function Page(props) {
     const router = useRouter();
     const equipes = JSON.parse(localStorage.getItem('equipes')) || [];
@@ -209,13 +210,14 @@ export default function Page(props) {
                         <Row className="mb-3">
                         <Form.Group as={Col}>
                                 <Form.Label>Data de Fundação:</Form.Label>
-                                <InputMask
-                                    mask="99/99/9999"
-                                    name="dataFundacao"
-                                    value={values.dataFundacao}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={`form-control ${touched.dataFundacao && errors.dataFundacao ? 'is-invalid' : 'is-valid'}`}
+                                <Form.Control as={ReactInputMask}
+                                   mask="9999/99/99"
+                                   name="dataFundacao"
+                                   value={values.dataFundacao}
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   isValid={touched.dataFundacao && !errors.dataFundacao}
+                                   isInvalid={touched.dataFundacao && errors.dataFundacao}
                                 />
                                 <Form.Control.Feedback type="invalid">{errors.dataFundacao}</Form.Control.Feedback>
                             </Form.Group>
