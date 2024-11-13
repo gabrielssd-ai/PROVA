@@ -1,95 +1,108 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import React, { useEffect, useState } from 'react';
+import { Carousel, Container, Row, Col, Card, Button } from 'react-bootstrap';
+import Link from 'next/link';
+import Pagina from '@/components/Pagina';
+import apiJogos from '@/api/api';
+import Dashboard from '@/components/Dashboard'; // Importe o componente Dashboard
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+export default function HomePage() {
+    const [jogosDestaque, setJogosDestaque] = useState([]);
+    const [jogosPopulares, setJogosPopulares] = useState([]);
+    const [torneios, setTorneios] = useState([]);
+
+    useEffect(() => {
+        fetchDestaques();
+        fetchJogosPopulares();
+        fetchTorneios();
+    }, []);
+
+    async function fetchDestaques() {
+        try {
+            const resultado = await apiJogos.get('/games?ordering=-added&key=3c9f3f7cdd874ffa985c468ad4b83467');
+            setJogosDestaque(resultado.data.results.slice(0, 5)); // Exibe os 5 primeiros
+        } catch (error) {
+            console.error('Erro ao buscar jogos em destaque:', error);
+        }
+    }
+
+    async function fetchJogosPopulares() {
+        try {
+            const resultado = await apiJogos.get('/games?ordering=-rating&key=3c9f3f7cdd874ffa985c468ad4b83467');
+            setJogosPopulares(resultado.data.results.slice(4, 10)); // Exibe os 6 primeiros
+        } catch (error) {
+            console.error('Erro ao buscar jogos populares:', error);
+        }
+    }
+
+    async function fetchTorneios() {
+        const localTorneios = JSON.parse(localStorage.getItem('torneio')) || [];
+        setTorneios(localTorneios.slice(0, 3)); 
+    }
+
+    return (
+        <Pagina titulo="Bem-vindo ao Portal de Jogos!">
+            <Container>
+                <h2 className="my-4">Destaques</h2>
+                <Carousel>
+                    {jogosDestaque.map(jogo => (
+                        <Carousel.Item key={jogo.id}>
+                            <img
+                                className="d-block w-100"
+                                src={jogo.background_image || '/path/to/default/image.jpg'}
+                                alt={jogo.name}
+                                style={{ height: '400px', objectFit: 'cover' }}
+                            />
+                            <Carousel.Caption>
+                                <h3>{jogo.name}</h3>
+                                <Link href={`/jogos/${jogo.id}`}>
+                                    <Button variant="primary">Ver Detalhes</Button>
+                                </Link>
+                            </Carousel.Caption>
+                        </Carousel.Item>
+                    ))}
+                </Carousel>
+
+                <h2 className="my-4">Jogos Populares</h2>
+                <Row>
+                    {jogosPopulares.map(jogo => (
+                        <Col key={jogo.id} md={4} className="mb-4">
+                            <Card>
+                                <Card.Img 
+                                    variant="top" 
+                                    src={jogo.background_image || '/path/to/default/image.jpg'} 
+                                    style={{ height: '200px', objectFit: 'cover' }}
+                                />
+                                <Card.Body>
+                                    <Card.Title>{jogo.name}</Card.Title>
+                                    <Link href={`/jogos/${jogo.id}`}>
+                                        <Button variant="primary" block>Ver Detalhes</Button>
+                                    </Link>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+
+                <h2 className="my-4">Próximos Torneios</h2>
+                <Row>
+                    {torneios.map(torneio => (
+                        <Col key={torneio.id} md={4} className="mb-4">
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title>{torneio.nome}</Card.Title>
+                                    <p><b>Data de Início:</b> {new Date(torneio.dataInicio).toLocaleDateString()}</p>
+                                    <p><b>Jogo:</b> {torneio.jogo}</p>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+
+                <h2 className="my-4">Estatísticas do Portal</h2>
+                <Dashboard />
+            </Container>
+        </Pagina>
+    );
 }
